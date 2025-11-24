@@ -46,6 +46,5 @@ Then open http://localhost:8000. Image uses `php:8.2-cli-alpine` and runs `php -
 
 ## Notes
 - Error handling: domain exceptions carry internal messages and user-friendly texts; UI shows only the friendly messages.
-- The FBA client is a stub that hashes the payload into a deterministic tracking number; swap `StubFbaClient` with a real client to integrate with FBA.
+- By default the demo uses `MockSpApiClient`, which builds an SP-API request blueprint and returns a deterministic tracking number without real credentials. Set `USE_STUB_CLIENT=1` to force the simple stub client instead.
 - Mock data lives under `mock/`; repositories/loaders are separated for easy replacement with real data sources.
-- Optional SP-API mock: set `USE_SPAPI_MOCK=1` to use `MockSpApiClient`, which builds an SP-API request blueprint and returns a deterministic tracking number without real credentials.

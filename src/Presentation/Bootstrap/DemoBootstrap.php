@@ -31,7 +31,7 @@ class DemoBootstrap
 
         $orders = new MockOrderRepository($this->rootDir . '/mock');
         $buyers = new MockBuyerRepository($this->rootDir . '/mock');
-        $client = getenv('USE_SPAPI_MOCK') ? new MockSpApiClient() : new StubFbaClient();
+        $client = getenv('USE_STUB_CLIENT') ? new StubFbaClient() : new MockSpApiClient();
         $shipping = new FbaShippingService(new FbaPayloadBuilder(), $client);
         $useCase = new ShipOrder($orders, $buyers, $shipping);
 
