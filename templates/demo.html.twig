@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FBA Shipping Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body { background: radial-gradient(circle at 20% 20%, #f0f4ff, #ffffff 40%); }
+        .card-highlight { border: 1px solid rgba(13,110,253,.2); box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05); }
+        .hero { padding: 2rem 1rem; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="hero text-center mb-4">
+        <h1 class="display-6 fw-semibold">FBA Shipping Demo</h1>
+        <p class="text-muted mb-0">Load mock order & buyer, send to FBA adapter, get a tracking number.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card card-highlight">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="order_id" class="form-label">Order ID</label>
+                            <input type="number" class="form-control" id="order_id" name="order_id" value="{{ view.orderId }}" required>
+                            <div class="invalid-feedback">Provide an order id.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer_id" class="form-label">Buyer ID</label>
+                            <input type="number" class="form-control" id="buyer_id" name="buyer_id" value="{{ view.buyerId }}" required>
+                            <div class="invalid-feedback">Provide a buyer id.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Ship via FBA</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            {% if view.error %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Error:</strong> {{ view.error }}
+                </div>
+            {% elseif view.tracking %}
+                <div class="alert alert-success" role="alert">
+                    <strong>Tracking:</strong> {{ view.tracking }}
+                </div>
+            {% else %}
+                <div class="alert alert-secondary" role="alert">Submit the form to simulate FBA shipping.</div>
+            {% endif %}
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-light">Order</div>
+                        <div class="card-body small">
+                            {% if view.orderData %}
+                                <div><strong>Order #</strong> {{ view.orderData.order_id ?? '' }}</div>
+                                <div><strong>Currency</strong> {{ view.orderData.currency ?? '' }}</div>
+                                <div><strong>Shipping</strong><br>{{ view.orderData.shipping_adress ?? '' | nl2br }}</div>
+                                <div class="mt-2"><strong>Products</strong></div>
+                                <ul class="list-unstyled mb-0">
+                                    {% for p in view.orderData.products %}
+                                        <li class="mb-1">• {{ p.title ?? '' }} (SKU: {{ p.sku ?? p.product_code ?? '' }}, Qty: {{ p.ammount ?? '1' }})</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-muted">No order loaded yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-light">Buyer</div>
+                        <div class="card-body small">
+                            {% if view.buyerData %}
+                                <div><strong>Country</strong> {{ view.buyerData.country_code ?? '' }}</div>
+                                <div><strong>Email</strong> {{ view.buyerData.email ?? '' }}</div>
+                                <div><strong>Phone</strong> {{ view.buyerData.phone ?? '' }}</div>
+                                <div class="mt-2"><strong>Address</strong><br>{{ view.buyerData.address ?? '' | nl2br }}</div>
+                            {% else %}
+                                <div class="text-muted">No buyer loaded yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+(() => {
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
+</body>
+</html>
