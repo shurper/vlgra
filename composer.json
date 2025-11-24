@@ -20,6 +20,7 @@
         "lint:fix": "phpcbf",
         "analyse": "phpstan analyse",
         "serve": "php -S localhost:8000 -t public public/index.php",
-        "demo": "php -S localhost:8000 -t public public/index.php"
+        "demo": "php -S localhost:8000 -t public public/index.php",
+        "test": "phpunit"
     }
 }
