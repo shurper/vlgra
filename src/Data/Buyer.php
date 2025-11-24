@@ -26,17 +26,26 @@ class Buyer implements BuyerInterface
         $mockDir = $mockDir ?? __DIR__ . '/../../mock';
         $path = rtrim($mockDir, '/\\') . "/buyer.$id.json";
         if (!is_readable($path)) {
-            throw new RuntimeException("Buyer mock file not found: $path");
+            throw new DomainException(
+                "Buyer mock file not found: $path",
+                sprintf('Buyer #%d was not found.', $id)
+            );
         }
 
         $raw = file_get_contents($path);
         if ($raw === false) {
-            throw new RuntimeException("Failed to read buyer mock: $path");
+            throw new DomainException(
+                "Failed to read buyer mock: $path",
+                'Buyer cannot be loaded right now.'
+            );
         }
 
         $data = json_decode($raw, true);
         if (!is_array($data)) {
-            throw new RuntimeException("Invalid JSON in buyer mock: $path");
+            throw new DomainException(
+                "Invalid JSON in buyer mock: $path",
+                'Buyer data is corrupted.'
+            );
         }
 
         return new self($data);
@@ -46,7 +55,10 @@ class Buyer implements BuyerInterface
     {
         $code = $this->data['country_code'] ?? null;
         if (!is_string($code) || $code === '') {
-            throw new DomainException('Buyer country_code is required.');
+            throw new DomainException(
+                'Buyer country_code is required.',
+                'Buyer data is incomplete.'
+            );
         }
 
         return $code;

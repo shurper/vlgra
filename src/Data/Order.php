@@ -24,17 +24,26 @@ class Order extends AbstractOrder
     {
         $path = rtrim($this->mockDir, '/\\') . "/order.$id.json";
         if (!is_readable($path)) {
-            throw new RuntimeException("Order mock file not found: $path");
+            throw new DomainException(
+                "Order mock file not found: $path",
+                sprintf('Order #%d was not found.', $id)
+            );
         }
 
         $raw = file_get_contents($path);
         if ($raw === false) {
-            throw new RuntimeException("Failed to read order mock: $path");
+            throw new DomainException(
+                "Failed to read order mock: $path",
+                'Order cannot be loaded right now.'
+            );
         }
 
         $data = json_decode($raw, true);
         if (!is_array($data)) {
-            throw new RuntimeException("Invalid JSON in order mock: $path");
+            throw new DomainException(
+                "Invalid JSON in order mock: $path",
+                'Order data is corrupted.'
+            );
         }
 
         return $data;
@@ -48,12 +57,18 @@ class Order extends AbstractOrder
         $requiredOrderKeys = ['shipping_country', 'shipping_zip', 'shipping_adress', 'products'];
         foreach ($requiredOrderKeys as $key) {
             if (!array_key_exists($key, $data)) {
-                throw new DomainException("Missing required order field: {$key}");
+                throw new DomainException(
+                    "Missing required order field: {$key}",
+                    'Order data is incomplete.'
+                );
             }
         }
 
         if (!is_array($data['products']) || count($data['products']) === 0) {
-            throw new DomainException('Order products list is empty.');
+            throw new DomainException(
+                'Order products list is empty.',
+                'Order has no items to ship.'
+            );
         }
     }
 

@@ -48,7 +48,10 @@ class DemoController
                 $buyer = $this->buyers->get($buyerId);
                 $buyerData = $buyer->toArray();
             } catch (Throwable $e) {
-                $error = $e->getMessage();
+                $error = ($e instanceof \App\Exception\DomainException)
+                    ? $e->getUserMessage()
+                    : 'Unexpected error. Please try again.';
+                error_log($e->getMessage());
             }
         }
 
