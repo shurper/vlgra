@@ -44,7 +44,9 @@ class DemoController
                 $this->assertIds($orderId, $buyerId);
 
                 $tracking = $this->shipOrder->execute($orderId, $buyerId);
-                $orderData = $this->orders->get($orderId)->getData();
+                $order = $this->orders->get($orderId);
+                $order->load();
+                $orderData = $order->getData();
                 $buyerData = $this->buyers->get($buyerId)->toArray();
             } catch (Throwable $e) {
                 $error = ($e instanceof DomainException)
