@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data;
 
 use RuntimeException;
@@ -15,7 +17,7 @@ class Order extends AbstractOrder
     }
 
     /**
-     * @return array<int|string, mixed>
+     * @return array<string, mixed>
      */
     protected function loadOrderData(int $id): array
     {

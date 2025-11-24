@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data;
 
 use RuntimeException;
 
 class Buyer implements BuyerInterface
 {
-    /** @var array<int|string, mixed> */
+    /** @var array<string, mixed> */
     private array $data;
 
     /**
-     * @param array<int|string, mixed> $data
+     * @param array<string, mixed> $data
      */
     public function __construct(array $data)
     {
@@ -36,6 +38,38 @@ class Buyer implements BuyerInterface
         }
 
         return new self($data);
+    }
+
+    public function getCountryCode(): string
+    {
+        $code = $this->data['country_code'] ?? null;
+        if (!is_string($code) || $code === '') {
+            throw new RuntimeException('Buyer country_code is required.');
+        }
+
+        return $code;
+    }
+
+    public function getEmail(): ?string
+    {
+        $email = $this->data['email'] ?? null;
+
+        return is_string($email) && $email !== '' ? $email : null;
+    }
+
+    public function getPhone(): ?string
+    {
+        $phone = $this->data['phone'] ?? null;
+
+        return is_string($phone) && $phone !== '' ? $phone : null;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return $this->data;
     }
 
     // ArrayAccess

@@ -15,10 +15,7 @@ class FbaShippingService implements ShippingServiceInterface
     {
         $order->load();
 
-        $orderData = $order->data;
-        if (!is_array($orderData)) {
-            throw new RuntimeException('Order data failed to load.');
-        }
+        $orderData = $order->getData();
 
         $payload = $this->buildPayload($order->getOrderId(), $orderData, $buyer);
 
@@ -47,11 +44,6 @@ class FbaShippingService implements ShippingServiceInterface
             throw new RuntimeException('Order products list is empty.');
         }
 
-        $buyerCountry = $buyer['country_code'] ?? null;
-        if (!is_string($buyerCountry) || $buyerCountry === '') {
-            throw new RuntimeException('Buyer country_code is required.');
-        }
-
         return [
             'order_id' => $orderId,
             'shipping' => [
@@ -60,9 +52,9 @@ class FbaShippingService implements ShippingServiceInterface
                 'address' => $orderData['shipping_adress'],
             ],
             'buyer' => [
-                'country_code' => $buyerCountry,
-                'email' => $buyer['email'] ?? null,
-                'phone' => $buyer['phone'] ?? null,
+                'country_code' => $buyer->getCountryCode(),
+                'email' => $buyer->getEmail(),
+                'phone' => $buyer->getPhone(),
             ],
             'items' => array_map(
                 static fn(array $item): array => [

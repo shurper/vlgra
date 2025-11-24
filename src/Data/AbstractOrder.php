@@ -1,15 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data;
+
+use RuntimeException;
 
 abstract class AbstractOrder
 {
     private int $id;
-    /** @var array<int|string, mixed>|null */
-    public ?array $data = null;
+
+    /** @var array<string, mixed> */
+    private array $data = [];
+
+    private bool $loaded = false;
 
     /**
-     * @return array<int|string, mixed>
+     * @return array<string, mixed>
      */
     abstract protected function loadOrderData(int $id): array;
 
@@ -26,5 +33,18 @@ abstract class AbstractOrder
     final public function load(): void
     {
         $this->data = $this->loadOrderData($this->getOrderId());
+        $this->loaded = true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    final public function getData(): array
+    {
+        if (!$this->loaded) {
+            throw new RuntimeException('Order data not loaded. Call load() first.');
+        }
+
+        return $this->data;
     }
 }
