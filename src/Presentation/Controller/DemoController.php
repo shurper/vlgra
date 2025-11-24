@@ -9,6 +9,7 @@ use App\Repository\BuyerRepositoryInterface;
 use App\Repository\OrderRepositoryInterface;
 use App\UseCase\ShipOrder;
 use Twig\Environment;
+use App\Exception\DomainException;
 use Throwable;
 
 class DemoController
@@ -40,15 +41,13 @@ class DemoController
             $buyerId = isset($body['buyer_id']) ? (int) $body['buyer_id'] : $buyerId;
 
             try {
-                $tracking = $this->shipOrder->execute($orderId, $buyerId);
-                $order = $this->orders->get($orderId);
-                $order->load();
-                $orderData = $order->getData();
+                $this->assertIds($orderId, $buyerId);
 
-                $buyer = $this->buyers->get($buyerId);
-                $buyerData = $buyer->toArray();
+                $tracking = $this->shipOrder->execute($orderId, $buyerId);
+                $orderData = $this->orders->get($orderId)->getData();
+                $buyerData = $this->buyers->get($buyerId)->toArray();
             } catch (Throwable $e) {
-                $error = ($e instanceof \App\Exception\DomainException)
+                $error = ($e instanceof DomainException)
                     ? $e->getUserMessage()
                     : 'Unexpected error. Please try again.';
                 error_log($e->getMessage());
@@ -58,5 +57,12 @@ class DemoController
         $viewModel = new DemoViewModel($orderId, $buyerId, $tracking, $error, $orderData, $buyerData);
 
         return $this->twig->render('demo.html.twig', ['view' => $viewModel]);
+    }
+
+    private function assertIds(int $orderId, int $buyerId): void
+    {
+        if ($orderId <= 0 || $buyerId <= 0) {
+            throw new DomainException('Invalid ids provided.', 'Please provide valid order and buyer ids.');
+        }
     }
 }
