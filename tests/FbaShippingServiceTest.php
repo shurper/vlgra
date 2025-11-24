@@ -7,7 +7,9 @@ namespace Tests;
 use App\Data\AbstractOrder;
 use App\Data\Buyer;
 use App\Data\Order;
+use App\Service\FbaPayloadBuilder;
 use App\Service\FbaShippingService;
+use App\Service\StubFbaClient;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -15,7 +17,7 @@ class FbaShippingServiceTest extends TestCase
 {
     public function testShipReturnsTrackingNumber(): void
     {
-        $service = new FbaShippingService();
+        $service = new FbaShippingService(new FbaPayloadBuilder(), new StubFbaClient());
         $order = new Order(16400, __DIR__ . '/../mock');
         $buyer = Buyer::fromMock(29664, __DIR__ . '/../mock');
 
@@ -26,7 +28,7 @@ class FbaShippingServiceTest extends TestCase
 
     public function testShipThrowsOnMissingOrderFields(): void
     {
-        $service = new FbaShippingService();
+        $service = new FbaShippingService(new FbaPayloadBuilder(), new StubFbaClient());
         $order = new class (1) extends AbstractOrder {
             protected function loadOrderData(int $id): array
             {
@@ -46,7 +48,7 @@ class FbaShippingServiceTest extends TestCase
 
     public function testShipThrowsOnEmptyProducts(): void
     {
-        $service = new FbaShippingService();
+        $service = new FbaShippingService(new FbaPayloadBuilder(), new StubFbaClient());
         $order = new class (1) extends AbstractOrder {
             protected function loadOrderData(int $id): array
             {

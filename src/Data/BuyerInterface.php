@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use ArrayAccess;
-
-/**
- * @extends ArrayAccess<string, mixed>
- */
-interface BuyerInterface extends ArrayAccess
+interface BuyerInterface
 {
     public function getCountryCode(): string;
 
