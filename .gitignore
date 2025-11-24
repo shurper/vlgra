@@ -1,5 +1,7 @@
 vendor/
 var/
+.phpunit.cache/
+phpunit.xml.bak
 
 # IDE/editor
 .idea/
