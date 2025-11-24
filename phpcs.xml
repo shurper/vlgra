@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="AppCodingStandard">
+    <description>Project coding standard based on PSR-12.</description>
+
+    <file>src</file>
+
+    <rule ref="PSR12"/>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+</ruleset>
