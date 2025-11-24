@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data;
 
+use App\Exception\DomainException;
 use RuntimeException;
 
 class Buyer implements BuyerInterface
@@ -17,6 +18,7 @@ class Buyer implements BuyerInterface
     public function __construct(array $data)
     {
         $this->data = $data;
+        $this->validate();
     }
 
     public static function fromMock(int $id, ?string $mockDir = null): self
@@ -44,7 +46,7 @@ class Buyer implements BuyerInterface
     {
         $code = $this->data['country_code'] ?? null;
         if (!is_string($code) || $code === '') {
-            throw new RuntimeException('Buyer country_code is required.');
+            throw new DomainException('Buyer country_code is required.');
         }
 
         return $code;
@@ -70,5 +72,10 @@ class Buyer implements BuyerInterface
     public function toArray(): array
     {
         return $this->data;
+    }
+
+    private function validate(): void
+    {
+        $this->getCountryCode();
     }
 }

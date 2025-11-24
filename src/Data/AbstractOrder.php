@@ -25,6 +25,17 @@ abstract class AbstractOrder
         $this->id = $id;
     }
 
+    abstract public function getShippingCountry(): string;
+
+    abstract public function getShippingZip(): string;
+
+    abstract public function getShippingAddress(): string;
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    abstract public function getProducts(): array;
+
     final public function getOrderId(): int
     {
         return $this->id;
@@ -32,8 +43,18 @@ abstract class AbstractOrder
 
     final public function load(): void
     {
-        $this->data = $this->loadOrderData($this->getOrderId());
+        $data = $this->loadOrderData($this->getOrderId());
+        $this->validateData($data);
+        $this->data = $data;
         $this->loaded = true;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    protected function validateData(array $data): void
+    {
+        // Default no-op; concrete implementations may override.
     }
 
     /**

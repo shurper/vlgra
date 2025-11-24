@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Dto\FbaShipmentRequest;
+
 interface FbaClientInterface
 {
-    /**
-     * @param array<string, mixed> $payload
-     */
-    public function send(array $payload): string;
+    public function send(FbaShipmentRequest $request): string;
 }

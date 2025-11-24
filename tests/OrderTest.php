@@ -18,6 +18,26 @@ class OrderTest extends TestCase
             {
                 return ['id' => $id];
             }
+
+            public function getShippingCountry(): string
+            {
+                return 'US';
+            }
+
+            public function getShippingZip(): string
+            {
+                return '00000';
+            }
+
+            public function getShippingAddress(): string
+            {
+                return '123 Test';
+            }
+
+            public function getProducts(): array
+            {
+                return [];
+            }
         };
 
         $this->expectException(RuntimeException::class);

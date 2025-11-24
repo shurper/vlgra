@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Data\Buyer;
+use App\Exception\DomainException;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 class BuyerTest extends TestCase
 {
@@ -21,9 +21,7 @@ class BuyerTest extends TestCase
 
     public function testGetCountryCodeThrowsWhenMissing(): void
     {
-        $buyer = new Buyer(['email' => 'x@test.com']);
-
-        $this->expectException(RuntimeException::class);
-        $buyer->getCountryCode();
+        $this->expectException(DomainException::class);
+        new Buyer(['email' => 'x@test.com']);
     }
 }
