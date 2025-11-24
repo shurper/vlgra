@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Domain\Shipping;
 
 use App\Data\AbstractOrder;
 use App\Data\BuyerInterface;

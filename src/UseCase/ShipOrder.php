@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\UseCase;
 
+use App\Domain\Shipping\ShippingServiceInterface;
 use App\Repository\OrderRepositoryInterface;
 use App\Repository\BuyerRepositoryInterface;
-use App\ShippingServiceInterface;
 
 class ShipOrder
 {

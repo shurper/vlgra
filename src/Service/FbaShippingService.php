@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Data\AbstractOrder;
 use App\Data\BuyerInterface;
-use App\ShippingServiceInterface;
+use App\Domain\Shipping\ShippingServiceInterface;
 use RuntimeException;
 
 class FbaShippingService implements ShippingServiceInterface
