@@ -4,10 +4,13 @@ namespace App\Data;
 
 abstract class AbstractOrder
 {
-
     private int $id;
-    public ?array $data;
+    /** @var array<int|string, mixed>|null */
+    public ?array $data = null;
 
+    /**
+     * @return array<int|string, mixed>
+     */
     abstract protected function loadOrderData(int $id): array;
 
     public function __construct(int $id)
@@ -24,5 +27,4 @@ abstract class AbstractOrder
     {
         $this->data = $this->loadOrderData($this->getOrderId());
     }
-
 }
